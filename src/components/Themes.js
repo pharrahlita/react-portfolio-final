@@ -1,4 +1,4 @@
-// Here we will create dark and light theme variables
+// dark and light theme variables
 
 export const lightTheme = {
 
