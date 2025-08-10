@@ -38,15 +38,20 @@ const LoadingScreen = ({ onFinish }) => {
 	);
 
 	useEffect(() => {
+		let timeoutIds = [];
+
 		if (step >= script.length) {
-			setTimeout(() => {
+			const timeout1 = setTimeout(() => {
 				setShowTitle(true);
-				setTimeout(() => {
+				const timeout2 = setTimeout(() => {
 					typeSubtext(chosenInitialSubtext.current, () => {
-						setTimeout(() => setDeleting(true), 1000);
+						const timeout3 = setTimeout(() => setDeleting(true), 1000);
+						timeoutIds.push(timeout3);
 					});
 				}, 800);
+				timeoutIds.push(timeout2);
 			}, 400);
+			timeoutIds.push(timeout1);
 			return;
 		}
 
@@ -65,7 +70,10 @@ const LoadingScreen = ({ onFinish }) => {
 			}
 		}, 40);
 
-		return () => clearInterval(typingRef.current);
+		return () => {
+			clearInterval(typingRef.current);
+			timeoutIds.forEach((id) => clearTimeout(id));
+		};
 	}, [step]);
 
 	const typeSubtext = (text, callback) => {
@@ -88,12 +96,13 @@ const LoadingScreen = ({ onFinish }) => {
 		if (!deleting) return;
 		if (typingRef.current) clearInterval(typingRef.current);
 
+		let finalTimeout;
 		deletingRef.current = setInterval(() => {
 			setSubtext((prev) => {
 				if (prev.length === 0) {
 					clearInterval(deletingRef.current);
 					typeSubtext(rawFinalSubtext, () => {
-						setTimeout(onFinish, 3000);
+						finalTimeout = setTimeout(onFinish, 3000);
 					});
 					return '';
 				} else {
@@ -102,7 +111,10 @@ const LoadingScreen = ({ onFinish }) => {
 			});
 		}, 20);
 
-		return () => clearInterval(deletingRef.current);
+		return () => {
+			clearInterval(deletingRef.current);
+			if (finalTimeout) clearTimeout(finalTimeout);
+		};
 	}, [deleting, onFinish]);
 
 	useEffect(() => {

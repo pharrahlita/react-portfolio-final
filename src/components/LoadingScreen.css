@@ -41,6 +41,7 @@ html,
 	max-width: 90%;
 	width: 100%;
 	color: #aaac9b;
+	margin-top: -15vh; /* This will move everything up by 15% of the viewport height */
 }
 
 .typed-line {
