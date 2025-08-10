@@ -1,78 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
-
-const LoadingScreenContainer = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100vh;
-	width: 100vw;
-	padding: 20px;
-	text-align: center;
-	user-select: none;
-	-webkit-user-select: none;
-`;
-
-const TerminalLines = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	max-width: 90%;
-	width: 100%;
-	color: #aaac9b;
-`;
-
-const TypedLine = styled.div`
-	font-size: 1.1rem;
-	margin: 6px 0;
-	word-break: break-word;
-	white-space: pre-wrap;
-	color: #aaac9b;
-`;
-
-const Title = styled.h1`
-	font-family: 'TAN Headline';
-	margin: 24px 0 12px 0;
-	color: #dbdad0;
-	font-size: 7rem;
-	opacity: 0;
-	gap: 0.2em;
-	letter-spacing: 10px;
-	animation: fadeIn 1s ease-in-out forwards;
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: scale(0.95);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1);
-		}
-	}
-`;
-
-const Cursor = styled.span`
-	display: inline-block;
-	width: 8px;
-	height: 1.2em;
-	background-color: #aaac9b;
-	margin-left: 4px;
-	animation: blink 1s steps(1) infinite;
-	vertical-align: bottom;
-	pointer-events: none;
-
-	@keyframes blink {
-		0%,
-		100% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0;
-		}
-	}
-`;
+import './LoadingScreen.css';
 
 const LoadingScreen = ({ onFinish }) => {
 	const [lines, setLines] = useState([]);
@@ -186,26 +113,28 @@ const LoadingScreen = ({ onFinish }) => {
 	}, []);
 
 	return (
-		<LoadingScreenContainer>
-			<TerminalLines>
+		<div className="loading-screen">
+			<div className="terminal-lines">
 				{lines.map((line, i) => (
-					<TypedLine key={i}>{line}</TypedLine>
+					<div key={i} className="typed-line">
+						{line}
+					</div>
 				))}
 
-				{currentText && <TypedLine>{currentText}</TypedLine>}
+				{currentText && <div className="typed-line">{currentText}</div>}
 
 				{showTitle && (
 					<>
-						<Title>SIANA</Title>
-						<TypedLine>
+						<h1 className="title">SIANA</h1>
+						<div className="typed-line">
 							<span>&gt;&gt; </span>
 							<span>{subtext}</span>
-							<Cursor />
-						</TypedLine>
+							<span className="cursor" />
+						</div>
 					</>
 				)}
-			</TerminalLines>
-		</LoadingScreenContainer>
+			</div>
+		</div>
 	);
 };
 
